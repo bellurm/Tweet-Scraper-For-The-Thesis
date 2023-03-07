@@ -5,7 +5,7 @@ from datetime import date
 import pandas
 
 # Define a list of offensive words
-offensive_words = {'lan', 'amk', 'aq', 'sikeyim', 'sokayım', 'sg', 'siktir', 'mq', "koyayım"}
+offensiveWords = {'lan', 'amk', 'aq', 'sikeyim', 'sokayım', 'sg', 'siktir', 'mq', "koyayım"}
 
 # Define the keywords/hashtags
 queries = {"YÖK", "üniversite", "uzaktan" ,"uzaktanegitim", "online", "onlineegitim", "yuzyuze", "yuzyuzeegitim"}
@@ -27,14 +27,13 @@ tweetDataList = []
 
 for query in queries:
     scraper = scrapeSearch(query, since, until)
-    counter = 1
     for i, tweet in enumerate(scraper.get_items(), start=1):
         tweetURL = f"https://twitter.com/{tweet.user.username}/status/{tweet.id}"
         tweetJSON = json.loads(tweet.json())
         tweet_text = tweetJSON['renderedContent']
 
         # Check if tweet contains any offensive words
-        if any(re.search(r'\b{}\b'.format(word), tweet_text, re.IGNORECASE) for word in offensive_words):
+        if any(re.search(r'\b{}\b'.format(word), tweet_text, re.IGNORECASE) for word in offensiveWords):
             continue
         else:
             # Get informations; username, date, likes, retweets, followers, following
@@ -46,20 +45,19 @@ for query in queries:
             following_count = tweet.user.friendsCount
 
             # If not exist offensive_words in the tweets, add to the tweetDataList the tweets.
-            tweetDataList.append([counter, user_name, tweet_date, like_count, retweet_count, follower_count, following_count, tweetURL, tweet_text])
+            tweetDataList.append([i, user_name, tweet_date, like_count, retweet_count, follower_count, following_count, tweetURL, tweet_text])
             
             # Increment the counter
-            counter += 1
-            print(counter)
+            i += 1
+            print(i)
 
         # If the counter equals the maximum number of data received break the loop
-        if counter > maxResult:
+        if i > maxResult:
             print("[*] Maksimum veri sayısına ulaşıldı.")
-            print("create df")
             # Create a data frame and define your columns of Excel by tweetDataList
             dataframe = pandas.DataFrame(tweetDataList, columns=["Tweet ID", "Kullanıcı Adı", "Tarih", "Beğeni Sayısı", "Retweet Sayısı", "Takipçi Sayısı", "Takip Edilenlerin Sayısı", "Tweet URL Adresi", "Tweet İçeriği"])
             # Add the data to Excel with 'index=False'. Because we defined a counter already.
-            dataframe.to_excel("last.xlsx", index=False)
-            print("to excel")
+            dataframe.to_excel("data.xlsx", index=False)
+            print("[*] Veriler Excel dosyasına aktarıldı.")
             break
     break
