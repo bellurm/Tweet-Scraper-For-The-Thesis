@@ -5,7 +5,8 @@ from datetime import date
 import pandas
 
 # Define a list of offensive words
-offensiveWords = {'lan', 'amk', 'aq', 'sikeyim', 'sokayım', 'sg', 'siktir', 'mq', "koyayım"}
+# This line (offensiveWords) updated at 2025/5/22
+offensiveWords = {"uygun olmayan ifadeler buraya eklenecek: 'x', 'y' ... "}
 
 # Define the keywords/hashtags
 queries = {"YÖK", "üniversite", "uzaktan" ,"uzaktanegitim", "online", "onlineegitim", "yuzyuze", "yuzyuzeegitim"}
